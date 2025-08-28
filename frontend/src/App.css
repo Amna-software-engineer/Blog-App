@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Light Theme */
+  --color-light-bg: #f9fafb;           /* Main background */
+  --color-light-card-bg: #ffffff;      /* Card background */
+  --color-light-btn-bg: #000000;       /* Button background */
+  --color-light-btn-txt: #ffffff;      /* Button text */
+  --color-light-txt: #111827;          /* Main text */
+  --color-light-muted: #6b7280;        /* Muted text */
+  --color-light-border: #e5e7eb;       /* Border */
+
+  /* Dark Theme */
+  --color-dark-bg: #000000;            /* Main background (black) */
+  --color-dark-card-bg: #151a29;       /* Card background */
+  --color-dark-btn-bg: #ffffff;        /* Button background */
+  --color-dark-btn-txt: #000000;       /* Button text */
+  --color-dark-txt: #f1f5f9;           /* Main text */
+  --color-dark-muted: #94a3b8;         /* Muted text */
+  --color-dark-border: #1e293b;        /* Border */
+}
+
+
+/* #101629 dark bg   #1f2938 lightDark*/
