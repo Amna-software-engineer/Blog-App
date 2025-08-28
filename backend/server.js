@@ -9,8 +9,8 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = 3000;
-const DB_URL=process.env.MONGODB_URL
 dotenv.config() 
+const DB_URL=process.env.MONGODB_URL
 
 app.use(express.urlencoded({ extended: true }));// to parse form data
 app.use(express.json())
@@ -18,13 +18,11 @@ app.use(cors({
   origin: "http://localhost:5173",  //  Frontend URL
   credentials: true                 //  Required for cookies
 }));
-app.use(cookieParser()); //  Required to read cookies from req.cookies
 app.use(authRouter);
 
-// app.use(cors());//allow from all origins/domains/urls
 
-mongoose.connect("mongodb+srv://admin:admin@blog-app.mmaqnfj.mongodb.net/blog-app").then(()=>{
-    console.log("connected to mongodb successfully");
+mongoose.connect(DB_URL).then(()=>{
+    console.log("connected to mongodb successfully ");
     
      app.listen(PORT, () => {
         console.log(`server running at PORT ${PORT}`);
@@ -34,4 +32,3 @@ mongoose.connect("mongodb+srv://admin:admin@blog-app.mmaqnfj.mongodb.net/blog-ap
     
 })
 
-// mongodb+srv://admin:admin@blog-app.mmaqnfj.mongodb.net/

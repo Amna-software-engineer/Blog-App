@@ -50,7 +50,7 @@ useEffect(() => {
       className='flex items-center   
       bg-light-bg dark:bg-dark-bg 
       text-light-txt dark:text-dark-txt 
-       text-md lg:text-lg px-6 py-4 
+       text-md lg:text-lg px-6 py-4 md:px-8
       border-b border-light-border dark:border-dark-border shadow-sm relative'
     >
       {/* Logo + Search */}

@@ -4,22 +4,23 @@
 
 @theme {
   /* Light Theme */
-  --color-light-bg: #f9fafb;           /* Main background */
-  --color-light-card-bg: #ffffff;      /* Card background */
-  --color-light-btn-bg: #000000;       /* Button background */
-  --color-light-btn-txt: #ffffff;      /* Button text */
-  --color-light-txt: #111827;          /* Main text */
-  --color-light-muted: #6b7280;        /* Muted text */
-  --color-light-border: #e5e7eb;       /* Border */
+  --color-light-bg: #e6f0ff;       /* Soft sky blue */
+  --color-light-card-bg: #f0f9ff;  /* Aqua blue cards */
+  --color-light-btn-bg: #2563eb;   /* Royal blue button */
+  --color-light-btn-txt: #ffffff;  /* Button text */
+  --color-light-txt: #1e293b;      /* Deep navy text */
+  --color-light-muted: #475569;    /* Muted gray-blue */
+  --color-light-border: #cbd5e1;   /* Light slate border */
 
   /* Dark Theme */
-  --color-dark-bg: #000000;            /* Main background (black) */
-  --color-dark-card-bg: #151a29;       /* Card background */
-  --color-dark-btn-bg: #ffffff;        /* Button background */
-  --color-dark-btn-txt: #000000;       /* Button text */
-  --color-dark-txt: #f1f5f9;           /* Main text */
-  --color-dark-muted: #94a3b8;         /* Muted text */
-  --color-dark-border: #1e293b;        /* Border */
+  --color-dark-bg: #000035;        /* Deep navy background */
+  --color-dark-card-bg: #0a0a2a;   /* Slightly lighter navy */
+  --color-dark-btn-bg: #4f46e5;    /* Indigo button */
+  --color-dark-btn-txt: #ffffff;   /* Button text */
+  --color-dark-txt: #e2e8f0;       /* Soft light gray */
+  --color-dark-muted: #94a3b8;     /* Muted gray-blue */
+  --color-dark-border: #1e2540;    /* Subtle navy-gray border */
+
 }
 
 
