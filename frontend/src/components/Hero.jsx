@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 const Hero = () => {
   return (
-    <div className='w-full h-screen bg-light-card-bg text-light-txt dark:bg-dark-card-bg dark:text-dark-txt px-8 '>
-      <div className='w-full h-full flex justify-center px-4 gap-8'>
+    <div className=' h-full md:h-[60%] bg-light-card-bg text-light-txt dark:bg-dark-card-bg dark:text-dark-txt px-10 py-6'>
+      <div className='w-full h-full flex justify-center px-4 gap-8 container mx-auto'>
         {/* left text*/}
         <div className='max-w-2xl mt-32 space-y-8'>
           <h1 className='font-bold text-6xl'>
@@ -28,7 +28,7 @@ const Hero = () => {
               Get Started
             </Link>
             <Link
-              to='/recent'
+              to='/about'
               className='px-4 py-2 border-2 border-light-border dark:border-dark-border 
                bg-transparent text-light-btn-bg dark:text-dark-btn-bg 
                hover:bg-light-btn-bg hover:text-light-btn-txt 
@@ -45,7 +45,7 @@ const Hero = () => {
           <img
             src='./hero img.png'
             alt=''
-            className='w-full max-w-lg object-cover'
+            className='hidden md:block w-full max-w-lg object-cover'
           />
         </div>
       </div>

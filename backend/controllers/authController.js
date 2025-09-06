@@ -4,8 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 let nodemailer = require('nodemailer');//for reset link email
 
-
-
 // Login controller
 exports.postLogin = [
     // validating email
@@ -29,8 +27,8 @@ exports.postLogin = [
             } else {
                 const isMatch = await bcrypt.compare(password, user.password);
                 if (isMatch) {
-                    const accessToken = jwt.sign({ id: user.id }, "Access-token-Secret", { expiresIn: "5m" });
-                    const refreshToken = jwt.sign({ id: user.id }, "Refresh-token-Secret", { expiresIn: "7d" });
+                    const accessToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email }, "Access-token-Secret", { expiresIn: "5m" });
+                    const refreshToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email }, "Refresh-token-Secret", { expiresIn: "7d" });
                     res.status(200).json({ msg: "Login Successfully", accessToken, refreshToken })
                 } else {
                     return res.status(400).json({ errs: ["Invalid Credentials"] });
@@ -67,7 +65,7 @@ exports.postSignup = [
 
             res.status(404).json({ errs: errors.array().map(err => err.msg) })
         } else {
-            console.log("insode signup saving block");
+            console.log("inside signup saving block");
             const hashedPassword = await bcrypt.hash(password, 10)
 
             const newUser = new User({ firstName, lastName, password: hashedPassword, email });
@@ -89,7 +87,7 @@ exports.postForgetPassword = async (req, res) => {
     if (!user) {
         return res.status(404).json({ errs: ["User not found"] })
     } else {
-        const token = jwt.sign({ id: user._id }, "Reset-password-Secret", { expiresIn: '15m' });
+        const token = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email }, "Reset-password-Secret", { expiresIn: '15m' });
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -116,6 +114,7 @@ exports.postForgetPassword = async (req, res) => {
         })
     }
 }
+// reset password controller
 exports.postResetPassword = [
     // validating password
     check("password").notEmpty().withMessage("Password is required").isLength({ min: 4 }).withMessage("Password must be at least 4 character long"),
@@ -155,7 +154,7 @@ exports.postResetPassword = [
 
 
     }]
-
+// refresh token controller
 exports.postRefreshToken = async (req, res) => {
     console.log("req.body", req.body);
     const refreshtoken = req.body?.refreshtoken;
@@ -164,13 +163,12 @@ exports.postRefreshToken = async (req, res) => {
         return res.status(401).json({ errs: ["No refresh token provided"] });
     }
     const decoded = jwt.verify(refreshtoken, "Refresh-token-Secret");
-    // const currentDate=new Date.now()
-    if (decoded.exp >  Date.now() / 1000) {
-        const user = await User.findById(decoded.id);
+    if (decoded.exp > Date.now() / 1000) {
+        const user = await User.findOne({ _id: decoded.id });
         if (!user) {
             res.status(404).json({ errs: ["User does not found"] })
         } else {
-            const accessToken = jwt.sign({ id: user.id }, "Access-token-Secret", { expiresIn: "5m" });
+            const accessToken = jwt.sign({ id: user.id, firstName: user.firstName, email: user.email }, "Access-token-Secret", { expiresIn: "5m" });
             res.status(200).json({ msg: "Access token extented successfully ", accessToken })
         }
     }

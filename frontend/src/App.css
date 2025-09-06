@@ -1,7 +1,16 @@
 @import 'tailwindcss';
 
-@custom-variant dark (&:where(.dark, .dark *));
 
+@custom-variant dark (&:where(.dark, .dark *));
+:root {
+  --slider-arrow: #1e293b;   /* light theme arrow/dots color */
+  --slider-dot: #1e293b;
+}
+
+.dark {
+  --slider-arrow: #f8fafc;   /* dark theme arrow/dots color */
+  --slider-dot: #f8fafc;
+}
 @theme {
   /* Light Theme */
   --color-light-bg: #e6f0ff;       /* Soft sky blue */
@@ -14,7 +23,7 @@
 
   /* Dark Theme */
   --color-dark-bg: #000035;        /* Deep navy background */
-  --color-dark-card-bg: #0a0a2a;   /* Slightly lighter navy */
+  --color-dark-card-bg: #080835;   /* Slightly lighter navy */
   --color-dark-btn-bg: #4f46e5;    /* Indigo button */
   --color-dark-btn-txt: #ffffff;   /* Button text */
   --color-dark-txt: #e2e8f0;       /* Soft light gray */
@@ -22,6 +31,10 @@
   --color-dark-border: #1e2540;    /* Subtle navy-gray border */
 
 }
+
+.slick-dots li button:before {color: var(--slider-dot)!important;}
+.slick-slide{padding-left: 20px;}
+.slick-prev:before, .slick-next:before{color: var(--slider-arrow)!important;}
 
 
 /* #101629 dark bg   #1f2938 lightDark*/

@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { useRefreshTokenMutation } from '../services/InjectetdAuthApi'
 import { toast } from 'react-toastify'
+import Spinner from './Spinner'
 
 const ProtectedRoute = ({ children }) => {
   const [isValid, setisValid] = useState(null)
@@ -14,6 +15,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     const varify = async () => {
+      setisValid(null);
       const isExpired = checktokenExpiry() //return true if accesstoken exired
       console.log('isExpired ', isExpired)
 
@@ -35,7 +37,9 @@ const ProtectedRoute = ({ children }) => {
             console.log('Api Resonse ', response.msg)
             setisValid(true)
           } catch (error) {
-            toast.error(error.data.errs[0])
+            console.log("Error from Api: ",error);
+            
+            toast.error(error?.data?.errs)
           }
         } else {//refreshtoken expired
           setisValid(false)
@@ -52,7 +56,8 @@ const ProtectedRoute = ({ children }) => {
     }
     varify()
   }, [])
-  if (isValid === null) return <div className=''>Loading...</div>
+  if (isValid === null) return <Spinner/>
+  
   return isValid ? children : <Navigate to='/login' />
 }
 
