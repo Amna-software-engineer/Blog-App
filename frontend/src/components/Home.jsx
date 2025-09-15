@@ -10,20 +10,18 @@ import { useGetBlogsQuery } from '../services/InjectedBlogApi'
 
 const Home = ({ searchQuery }) => {
   const dispatch = useDispatch()
-  let { data: blogsList, isLoading, isError, error } = useGetBlogsQuery()
-  const { blogs } = useSelector(state => state.app)
-  // console.log("blogsList from api ", blogsList);
+  let { data: blogsList, isLoading, isError, error } = useGetBlogsQuery();
   const tagList = [
     'Web Development',
     'Artificial intelligence (AI)',
     'MERN stack'
   ]
   const [seledtedTag, setSeledtedTag] = useState(null)
-  // console.log('blogs from store ', blogs)
   useEffect(() => {
-    console.log('blogsList in useEffect', blogsList?.AllBlogs)
-    dispatch(saveBlogstoStore(blogsList))
-    localStorage.setItem('blogs', JSON.stringify(blogsList))
+    if(blogsList){
+      dispatch(saveBlogstoStore(blogsList))
+      localStorage.setItem('blogs', JSON.stringify(blogsList))
+    }
   }, [blogsList])
   const filteredBlog = seledtedTag
     ? blogsList.filter(

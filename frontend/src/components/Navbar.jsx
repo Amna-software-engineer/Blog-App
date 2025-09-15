@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { FiAlignJustify } from 'react-icons/fi'
 import { checktokenExpiry } from '../utils/auth'
 import { toast } from 'react-toastify'
+import { jwtDecode } from 'jwt-decode'
 
 const Navbar = ({setSearchQuery,searchQuery}) => {
   const navigate = useNavigate()
@@ -15,7 +16,16 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
   const [isActive, setisActive] = useState(false)
   const [isLoggedIn, setisLoggedIn] = useState(false)
   console.log("searchQuery in navbar",searchQuery);
-  
+    //geting user id
+    const accessToken = localStorage.getItem('accessToken')
+    let userName ="";
+    if (accessToken) {
+      const decoded = jwtDecode(accessToken)
+       userName = decoded?.firstName;
+      console.log("decoded in navbar",decoded);
+      
+    }
+    
   const toggleTheme = () => {
     if (darkTheme) {
       document.getElementById('root').classList.remove('dark')
@@ -28,9 +38,13 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
     } //for the first time when there is no theme in local storage it doesn't work
   }
   useEffect(() => {
+    console.log("isLoggedIn inside useEffect",isLoggedIn);
+    
     const isExpired = checktokenExpiry()
     isExpired ? setisLoggedIn(false) : setisLoggedIn(true)
   }, [])
+
+    console.log("isLoggedIn outside useEffect",isLoggedIn);
 
   useEffect(() => {
     if (darkTheme) {
@@ -105,57 +119,29 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to='/about'
-              className={({ isActive }) =>
-                isActive
-                  ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
-                  : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
-              }
-            >
-              About
-            </NavLink>
+            <NavLink to='/about' className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > About </NavLink>
           </li>
 
           {/* Signup */}
-          {isLoggedIn ? (
+    {console.log("isLoggedIn",isLoggedIn)}
+          {  isLoggedIn
+           ? (<>
             <li>
-              <button
-                onClick={handleLogout}
-                className={({ isActive }) =>
-                  isActive
-                    ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
-                    : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
-                }
-              >
-                Logout
-              </button>
+              <button onClick={handleLogout} className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > Logout </button>
             </li>
+            <li>
+                  <span className='rounded-full h-10 w-10 flex items-center justify-center dark:bg-dark-btn-bg bg-light-btn-bg transition-colors hover:dark:text-dark-btn-txt hover:text-light-btn-txt text-[18px]'>
+                      {userName?.slice(0, 1)}
+                    </span> 
+            </li>
+           </>
           ) : (
             <>
               <li>
-                <button
-                  onClick={() => navigate('/signup')}
-                  className={({ isActive }) =>
-                    isActive
-                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
-                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
-                  }
-                >
-                  Signup
-                </button>
+                <button onClick={() => navigate('/signup')} className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > Signup </button>
               </li>
               <li>
-                <button
-                  onClick={() => navigate('/login')}
-                  className={({ isActive }) =>
-                    isActive
-                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
-                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
-                  }
-                >
-                  Login
-                </button>
+                <button onClick={() => navigate('/login')} className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > Login </button>
               </li>
             </>
           )}

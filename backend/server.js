@@ -5,6 +5,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 // local modules
 const authRouter = require("./routers/authRouter");
+const userRouter = require("./routers/userRouter");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cors({
   credentials: true                 //  Required for cookies
 }));
 app.use(authRouter);
+app.use(userRouter);
 
 
 mongoose.connect(DB_URL).then(()=>{
