@@ -30,13 +30,13 @@ exports.getAllBlogs = async (req, res) => {
 //postAddComment controller
 exports.postAddComment = async (req, res) => {
     console.log("reqbody", req.body);
-    const { blogId, userId, createdAt, commentBody } = req.body;
+    const { blogId, userId, commentBody } = req.body;
 
     const user = await User.findById(userId);
     const blog = await Blogs.findById(blogId);
     if (user && blog) {
         try {
-            const newComment = new Comments({ blogId, userId, createdAt, comment: commentBody });
+            const newComment = new Comments({ blogId, userId,  content: commentBody });
                 const addedComent = await newComment.save();
                 console.log("addedComent ", addedComent);
                 res.status(200).json({ msg: "comment added successfully", newComment })

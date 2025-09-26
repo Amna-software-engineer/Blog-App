@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useResetPasswordMutation } from '../services/InjectetdAuthApi'
+import { useResetPasswordMutation } from '../../services/InjectetdAuthApi'
 import { toast } from 'react-toastify'
 
 const ResetPassword = () => {

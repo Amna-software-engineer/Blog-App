@@ -10,7 +10,7 @@ createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <App />
       <ToastContainer
-        autoClose={3000}
+        autoClose={1000}
         theme={
          localStorage.getItem('theme') && localStorage.getItem('theme') 
         }

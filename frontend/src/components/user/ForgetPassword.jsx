@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate,  } from 'react-router-dom'
-import { useForgetPassordMutation } from '../services/InjectetdAuthApi';
+import { useForgetPassordMutation } from '../../services/InjectetdAuthApi';
 import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {  

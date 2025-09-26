@@ -3,6 +3,15 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 let nodemailer = require('nodemailer');//for reset link email
+const dotenv = require("dotenv");
+
+dotenv.config();
+const JWT_ACCESS_SECRET = process.env.access_token_secret
+const JWT_REFRESH_SECRET = process.env.refresh_token_secret
+const JWT_RESET_PASSWORD_SECRET = process.env.Reset_password_Secret
+const JWT_ADMIN_ACCESS_SECRET = process.env.admin_access_token_secret
+const JWT_ADMIN_REFRESH_SECRET = process.env.admin_refresh_token_secret
+const JWT_ADMIN_SECRET_key = process.env.admin_secret_key
 
 // Login controller
 exports.postLogin = [
@@ -23,17 +32,17 @@ exports.postLogin = [
         } else {
             const user = await User.findOne({ email });
             if (!user) {
-                res.status(404).json({ errs: ["email or password does not found"] })
-            } else {
-                const isMatch = await bcrypt.compare(password, user.password);
-                if (isMatch) {
-                    const accessToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email }, "Access-token-Secret", { expiresIn: "5m" });
-                    const refreshToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email }, "Refresh-token-Secret", { expiresIn: "7d" });
-                    res.status(200).json({ msg: "Login Successfully", accessToken, refreshToken })
-                } else {
-                    return res.status(400).json({ errs: ["Invalid Credentials"] });
-                }
+                return res.status(404).json({ errs: ["email or password does not found"] })
             }
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (isMatch) {
+                const accessToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email,isAdmin: user.isAdmin }, JWT_ACCESS_SECRET, { expiresIn: "5m" });
+                const refreshToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email, isAdmin: user.isAdmin}, JWT_REFRESH_SECRET, { expiresIn: "7d" });
+                res.status(200).json({ msg: "Login Successfully", accessToken, refreshToken })
+            } else {
+                return res.status(400).json({ errs: ["Invalid Credentials"] });
+            }
+
         }
 
     }]
@@ -58,20 +67,32 @@ exports.postSignup = [
     })
     , async (req, res) => {
 
-        const { firstName, lastName, email, password, } = req.body;
+        const { firstName, lastName, email, password, adminKey, userType } = req.body;
 
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-
             res.status(404).json({ errs: errors.array().map(err => err.msg) })
         } else {
-            console.log("inside signup saving block");
-            const hashedPassword = await bcrypt.hash(password, 10)
+            try {
+                // check if user is admin, and admin key matches
+                if (userType === "admin" && adminKey !== JWT_ADMIN_SECRET_key) {
+                    console.log("insid admin signup", adminKey, JWT_ADMIN_SECRET_key);
+                    console.log(`userType === "admin" && adminKey !== JWT_ADMIN_SECRET_key`, adminKey === JWT_ADMIN_SECRET_key);
+                    return res.status(401).json({ errs: ["Invalid Admin Key"] });
+                }
 
-            const newUser = new User({ firstName, lastName, password: hashedPassword, email });
-            const savedUser = await newUser.save();
-            console.log("user Added successfully", savedUser);
-            res.status(200).json({ msg: "User added successfully", savedUser })
+                console.log("outside admin signup");
+                const hashedPassword = await bcrypt.hash(password, 10)
+                const newUser = new User({ firstName, lastName, password: hashedPassword, email, isAdmin: userType === "admin" });
+                const savedUser = await newUser.save();
+                console.log("user Added successfully", savedUser);
+                res.status(200).json({ msg: "User added successfully", savedUser: { id: savedUser._id, firstName: savedUser.firstName, email: savedUser.email, isAdmin: savedUser.isAdmin } })
+
+            } catch (error) {
+                console.error("Signup error:", error);
+                res.status(500).json({ errs: ["Error creating user"] });
+            }
+
         }
 
 
@@ -87,7 +108,7 @@ exports.postForgetPassword = async (req, res) => {
     if (!user) {
         return res.status(404).json({ errs: ["User not found"] })
     } else {
-        const token = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email }, "Reset-password-Secret", { expiresIn: '15m' });
+        const token = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email,isAdmin: user.isAdmin }, JWT_RESET_PASSWORD_SECRET, { expiresIn: '15m' });
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -136,7 +157,7 @@ exports.postResetPassword = [
             res.status(400).json({ errs: errors.array().map(err => err.msg) })
         }
         try {
-            const decoded = jwt.verify(token, "Reset-password-Secret");
+            const decoded = jwt.verify(token, JWT_RESET_PASSWORD_SECRET);
             console.log("decoded ", decoded);
             const user = await User.findById(id);
             if (!user) {
@@ -158,17 +179,18 @@ exports.postResetPassword = [
 exports.postRefreshToken = async (req, res) => {
     console.log("req.body", req.body);
     const refreshtoken = req.body?.refreshtoken;
+console.log("refreshToken ",refreshtoken);
 
     if (!refreshtoken) {
         return res.status(401).json({ errs: ["No refresh token provided"] });
     }
-    const decoded = jwt.verify(refreshtoken, "Refresh-token-Secret");
+    const decoded = jwt.verify(refreshtoken, JWT_REFRESH_SECRET);
     if (decoded.exp > Date.now() / 1000) {
         const user = await User.findOne({ _id: decoded.id });
         if (!user) {
             res.status(404).json({ errs: ["User does not found"] })
         } else {
-            const accessToken = jwt.sign({ id: user.id, firstName: user.firstName, email: user.email }, "Access-token-Secret", { expiresIn: "5m" });
+            const accessToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email,isAdmin: user.isAdmin }, "Access-token-Secret", { expiresIn: "5m" });
             res.status(200).json({ msg: "Access token extented successfully ", accessToken })
         }
     }

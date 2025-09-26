@@ -6,6 +6,7 @@ const blogSchema = new mongoose.Schema({
     image: { type: String, required: true },
     Likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     watchLater: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-})
+
+},{timestamps:true})
 
 module.exports = mongoose.model("Blogs", blogSchema);

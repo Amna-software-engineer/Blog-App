@@ -1,9 +1,10 @@
 import { jwtDecode } from "jwt-decode"
 
-export const checktokenExpiry = () => {
+export const CheckTokenExpiry = () => {
     const accessToken = localStorage.getItem("accessToken") && localStorage.getItem("accessToken");
+console.log("accessToken ",accessToken);
 
-    if (!accessToken) return true;
+    if (!accessToken) return false;
     const decoded = jwtDecode(accessToken);
     const currentTime = Date.now() / 1000;
     if (currentTime > decoded.exp) {
@@ -14,5 +15,5 @@ export const checktokenExpiry = () => {
     return(null)
 
 }
-export default CheckTokenExpiray
+export default CheckTokenExpiry
 

@@ -5,7 +5,7 @@ import BlogCard from './BlogCard'
 import { useSelector } from 'react-redux'
 
 const Blogs = ({  searchQuery }) => {
-  const { blogs } = useSelector(state => state.app)
+  const { blogs } = useSelector(state => state.blog)
 
   return (
     <div className=' h-full bg-light-card-bg dark:bg-dark-card-bg'>

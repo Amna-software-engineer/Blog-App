@@ -3,10 +3,10 @@ import Hero from './Hero.jsx'
 import BlogCard from './BlogCard.jsx'
 import { Link } from 'react-router-dom'
 import SlickSlider from './SlickSlider.jsx'
-import { saveBlogstoStore } from '../services/UserSlice.js'
+import { saveBlogstoStore } from '../../services/UserSlice.js'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useGetBlogsQuery } from '../services/InjectedBlogApi'
+import { useGetBlogsQuery } from '../../services/InjectedBlogApi.js'
 
 const Home = ({ searchQuery }) => {
   const dispatch = useDispatch()

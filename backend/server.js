@@ -7,6 +7,8 @@ const dotenv = require("dotenv");
 const authRouter = require("./routers/authRouter");
 const userRouter = require("./routers/userRouter");
 const cookieParser = require("cookie-parser");
+const adminRouter = require("./routers/adminRouter");
+const { isAdmin } = require("./middleware/isAdmin");
 
 const app = express();
 const PORT = 3000;
@@ -21,6 +23,7 @@ app.use(cors({
 }));
 app.use(authRouter);
 app.use(userRouter);
+app.use("/admin",adminRouter);
 
 
 mongoose.connect(DB_URL).then(()=>{

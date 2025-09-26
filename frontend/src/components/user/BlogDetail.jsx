@@ -15,10 +15,11 @@ import {
   useGetCommentsQuery,
   useGetSingleBlogQuery,
   useLikeBlogMutation
-} from '../services/InjectedBlogApi'
+} from '../../services/InjectedBlogApi'
 import { jwtDecode } from 'jwt-decode'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import TimeAgo from '../admin/TimeAgo'
 
 const BlogDetail = () => {
   const { id: blogId } = useParams();
@@ -29,7 +30,8 @@ const singleBlog=data?.blog;
   const accessToken = localStorage.getItem('accessToken')
   const decoded = jwtDecode(accessToken)
   const userId = decoded?.id
-  const createdAt = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+console.log("userid ",decoded);
+
   const [commentBody, setCommentBody] = useState('')
   const [activeReplyId, setActiveReplyId] = useState(null)
   const [isInWatchLater, setIsInWatchLater] = useState(null)
@@ -42,8 +44,8 @@ const singleBlog=data?.blog;
   const handleComentSubmition = async (e, commentId) => {
     e.preventDefault()
     try {
-      console.log(blogId, userId, createdAt, commentBody,"insodle handleComentSubmition");
-      let commentData = { blogId, userId, createdAt, commentBody }
+      console.log(blogId, userId, commentBody,"insodle handleComentSubmition");
+      let commentData = { blogId, userId, commentBody }
       console.log('commentData ', commentData)
       const apiResponse = await AddComment({commentData, blogId}).unwrap()
       console.log('apiResponse ', apiResponse)
@@ -164,7 +166,7 @@ const singleBlog=data?.blog;
                     key={i}
                   >
                     <span className='font-semibold p-2  bg-light-card-bg dark:bg-dark-card-bg rounded-full h-10 w-10 flex items-center justify-center'>
-                      {com?.userId.firstName.slice(0, 1)}
+                      {com?.userId.firstName.slice(0, 1).toLocaleUpperCase()}
                     </span>
                     <div className='w-full space-y-2'>
                       <p>
@@ -172,14 +174,10 @@ const singleBlog=data?.blog;
                           {com?.userId.firstName}
                         </span>
                         <small className='text-light-muted dark:text-dark-muted ms-2'>
-                          {com?.CreatedAt &&
-                            new Date(com.CreatedAt).toLocaleDateString(
-                              'en-US',
-                              { year: 'numeric', month: 'long', day: 'numeric' }
-                            )}
+                          <TimeAgo date={com?.updatedAt}/>
                         </small>
                       </p>
-                      <p>{com?.comment}</p>
+                      <p>{com?.content}</p>
                       <div className='flex gap-2 text-sm'>
                         <span className='flex items-center gap-1 cursor-pointer'>
                           <FaRegHeart /> 0
@@ -221,3 +219,4 @@ const singleBlog=data?.blog;
 }
 
 export default BlogDetail
+

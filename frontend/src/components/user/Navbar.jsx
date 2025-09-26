@@ -3,29 +3,34 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md'
 import { IoSearch } from 'react-icons/io5'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { FiAlignJustify } from 'react-icons/fi'
-import { checktokenExpiry } from '../utils/auth'
+import { checktokenExpiry } from '../../utils/auth'
 import { toast } from 'react-toastify'
 import { jwtDecode } from 'jwt-decode'
 
-const Navbar = ({setSearchQuery,searchQuery}) => {
+const Navbar = ({ setSearchQuery, searchQuery }) => {
   const navigate = useNavigate()
   const [darkTheme, setDarkTheme] = useState(
     () =>
       localStorage.getItem('theme') && localStorage.getItem('theme') === 'dark'
   )
   const [isActive, setisActive] = useState(false)
-  const [isLoggedIn, setisLoggedIn] = useState(false)
-  console.log("searchQuery in navbar",searchQuery);
-    //geting user id
-    const accessToken = localStorage.getItem('accessToken')
-    let userName ="";
-    if (accessToken) {
-      const decoded = jwtDecode(accessToken)
-       userName = decoded?.firstName;
-      console.log("decoded in navbar",decoded);
-      
-    }
-    
+  const isLoggedIn =
+    localStorage.getItem('isLoggedIn') === 'true' ? true : false
+  // console.log('searchQuery in navbar', searchQuery)
+  //geting user id
+  const accessToken = localStorage.getItem('accessToken')
+  let userName = ''
+  const Links = [
+    { txt: 'Home', url: '/' },
+    { txt: 'Blogs', url: '/blogs' },
+    { txt: 'About', url: '/about' }
+  ]
+  if (accessToken) {
+    const decoded = jwtDecode(accessToken)
+    userName = decoded?.firstName
+    // console.log('decoded in navbar', decoded)
+  }
+
   const toggleTheme = () => {
     if (darkTheme) {
       document.getElementById('root').classList.remove('dark')
@@ -37,14 +42,6 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
       setDarkTheme(true)
     } //for the first time when there is no theme in local storage it doesn't work
   }
-  useEffect(() => {
-    console.log("isLoggedIn inside useEffect",isLoggedIn);
-    
-    const isExpired = checktokenExpiry()
-    isExpired ? setisLoggedIn(false) : setisLoggedIn(true)
-  }, [])
-
-    console.log("isLoggedIn outside useEffect",isLoggedIn);
 
   useEffect(() => {
     if (darkTheme) {
@@ -56,7 +53,9 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken')
+    localStorage.removeItem('isLoggedIn')
     toast.success('Logout Successfully')
+    localStorage.removeItem('refreshToken')
     console.log(localStorage.getItem('accessToken'))
     navigate('/login')
   }
@@ -66,9 +65,7 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
       className='w-full bg-light-bg dark:bg-dark-bg 
       text-light-txt dark:text-dark-txt border-b border-light-border dark:border-dark-border shadow-sm sticky top-0 left-0 '
     >
-      <div
-        className='flex items-center  text-md lg:text-lg py-4  z-20 container mx-auto px-10'
-      >
+      <div className='flex items-center  text-md lg:text-lg py-4  z-20 container mx-auto px-10'>
         {/* Logo + Search */}
         <div className='flex items-center gap-6'>
           <span className='font-bold text-xl text-light-accent dark:text-dark-btn-bg'>
@@ -84,9 +81,9 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
               border border-light-border dark:border-dark-border 
               text-light-txt dark:text-dark-txt 
               focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-btn-bg 
-              outline-none' 
+              outline-none'
               value={searchQuery}
-              onChange={(e)=>setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
             />
             <IoSearch className='absolute right-2 text-light-muted dark:text-dark-muted' />
           </div>
@@ -94,54 +91,71 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
 
         {/* Links */}
         <ul className='hidden md:flex ms-auto items-center gap-8 font-medium'>
-          <li>
-            <NavLink
-              to='/'
-              className={({ isActive }) =>
-                isActive
-                  ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
-                  : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
-              }
-            >
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to='/blogs'
-              className={({ isActive }) =>
-                isActive
-                  ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
-                  : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
-              }
-            >
-              All Blogs
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to='/about' className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > About </NavLink>
-          </li>
-
+          {Links.map((Link, i) => (
+            <li key={i}>
+              
+              <NavLink
+                to={Link.url}
+                className={({ isActive }) =>
+                  isActive
+                    ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                    : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                }
+              >
+                
+                {Link.txt}
+              </NavLink>
+            </li>
+          ))}
           {/* Signup */}
-    {console.log("isLoggedIn",isLoggedIn)}
-          {  isLoggedIn
-           ? (<>
-            <li>
-              <button onClick={handleLogout} className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > Logout </button>
-            </li>
-            <li>
-                  <span className='rounded-full h-10 w-10 flex items-center justify-center dark:bg-dark-btn-bg bg-light-btn-bg transition-colors hover:dark:text-dark-btn-txt hover:text-light-btn-txt text-[18px]'>
-                      {userName?.slice(0, 1)}
-                    </span> 
-            </li>
-           </>
+          {console.log('isLoggedIn', isLoggedIn)}
+          {isLoggedIn ? (
+            <>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                  }
+                >
+                  
+                  Logout
+                </button>
+              </li>
+              <li>
+                <span className='rounded-full h-10 w-10 flex items-center justify-center dark:bg-dark-btn-bg bg-light-btn-bg transition-colors hover:dark:text-dark-btn-txt hover:text-light-btn-txt text-[18px]'>
+                  {userName?.slice(0, 1).toLocaleUpperCase()}
+                </span>
+              </li>
+            </>
           ) : (
             <>
               <li>
-                <button onClick={() => navigate('/signup')} className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > Signup </button>
+                <button
+                  onClick={() => navigate('/signup')}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                  }
+                >
+                  
+                  Signup
+                </button>
               </li>
               <li>
-                <button onClick={() => navigate('/login')} className={({ isActive }) => isActive ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors' : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors' } > Login </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                  }
+                >
+                  Login
+                </button>
               </li>
             </>
           )}
@@ -176,30 +190,32 @@ const Navbar = ({setSearchQuery,searchQuery}) => {
         <button>
           <FiAlignJustify
             className='md:hidden text-2xl ms-2'
-            onClick={() => isActive ? setisActive(false) : setisActive(true)}
+            onClick={() => (isActive ? setisActive(false) : setisActive(true))}
           />
         </button>
         {isActive && (
           <ul className='md:hidden flex flex-col gap-8 font-medium absolute top-[65px] left-0 ps-10 bg-light-bg dark:bg-dark-bg w-full py-4'>
-            <li>
-              <a href='/'>Home</a>
-            </li>
-            <li>
-              <a href='/blogs'>All Blogs</a>
-            </li>
-            <li>
-              <a href='/about'>About</a>
-            </li>
+            {Links.map((link, i) => (
+              <li>
+                <a href={link.url}>{link.txt}</a>
+              </li>
+            ))}
+
             {/* Signup */}
-            {isLoggedIn ? (<li>
-              <button onClick={handleLogout}> Logout </button>
-            </li>):( <><li>
-              <button onClick={() => navigate('/signup')}> Signup </button>
-            </li>
-            <li>
-              <button onClick={() => navigate('/login')}> Login </button>
-            </li></>)}
-           
+            {isLoggedIn ? (
+              <li>
+                <button onClick={handleLogout}> Logout </button>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <button onClick={() => navigate('/signup')}> Signup </button>
+                </li>
+                <li>
+                  <button onClick={() => navigate('/login')}> Login </button>
+                </li>
+              </>
+            )}
           </ul>
         )}
       </div>

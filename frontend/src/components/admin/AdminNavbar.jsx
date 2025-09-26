@@ -1,0 +1,161 @@
+import React, { useEffect, useState } from 'react'
+import { MdDarkMode, MdLightMode } from 'react-icons/md'
+import { IoSearch } from 'react-icons/io5'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { FiAlignJustify } from 'react-icons/fi'
+import { checktokenExpiry } from '../../utils/auth'
+import { toast } from 'react-toastify'
+import { jwtDecode } from 'jwt-decode'
+
+const AdminNavbar = ({ setSearchQuery, searchQuery }) => {
+  const navigate = useNavigate()
+  const [darkTheme, setDarkTheme] = useState(
+    () =>
+      localStorage.getItem('theme') && localStorage.getItem('theme') === 'dark'
+  )
+  const [isActive, setisActive] = useState(false)
+  // const [isLoggedIn, setisLoggedIn] = useState(false)
+  const isLoggedIn =
+    localStorage.getItem('isLoggedIn') === 'true' ? true : false
+  // console.log('searchQuery in navbar', searchQuery)
+  //geting user id
+  const accessToken = localStorage.getItem('accessToken');
+  let userName = '';
+  if (accessToken) {
+    const decoded = jwtDecode(accessToken)
+    userName = decoded?.firstName
+  }
+
+  const toggleTheme = () => {
+    if (darkTheme) {
+      document.getElementById('root').classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+      setDarkTheme(false)
+    } else {
+      document.getElementById('root').classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+      setDarkTheme(true)
+    } //for the first time when there is no theme in local storage it doesn't work
+  }
+ 
+
+  useEffect(() => {
+    if (darkTheme) {
+      document.getElementById('root').classList.add('dark')
+    } else {
+      document.getElementById('root').classList.remove('dark')
+    }
+  }, [darkTheme])
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login')
+  }
+
+  return (
+    <div
+      className='w-full bg-light-bg dark:bg-dark-bg 
+      text-light-txt dark:text-dark-txt border-b border-light-border dark:border-dark-border shadow-sm sticky top-0 left-0 '
+    >
+      <div className='flex items-center  text-md lg:text-lg py-4  z-20 container mx-auto px-10'>
+        {/* Logo + Search */}
+        <div className='flex items-center gap-6'>
+          <span className='font-bold text-xl text-light-accent dark:text-dark-btn-bg'>
+            BlogNest
+          </span>
+
+          <div className='relative hidden sm:flex items-center'>
+            <input
+              type='search'
+              placeholder='Search...'
+              className='px-3 py-1 rounded-md 
+              bg-light-card-bg dark:bg-dark-card-bg 
+              border border-light-border dark:border-dark-border 
+              text-light-txt dark:text-dark-txt 
+              focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-btn-bg 
+              outline-none'
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            <IoSearch className='absolute right-2 text-light-muted dark:text-dark-muted' />
+          </div>
+        </div>
+
+        {/* Links */}
+        <ul className='hidden md:flex ms-auto items-center gap-8 font-medium'>
+         
+          {/* Signup */}
+          {console.log('isLoggedIn', isLoggedIn)}
+          {isLoggedIn ? (
+            <>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                  }
+                >
+                  Logout
+                </button>
+              </li>
+                {/* Theme Toggle */}
+          <li>
+            <button
+              className='p-2 rounded-md 
+              bg-light-card-bg dark:bg-dark-card-bg 
+              border border-light-border dark:border-dark-border 
+              text-light-txt dark:text-dark-txt 
+              hover:shadow'
+              onClick={toggleTheme}
+            >
+              {darkTheme ? <MdLightMode /> : <MdDarkMode />}
+            </button>
+          </li>
+              <li>
+                <span className='rounded-full h-10 w-10 flex items-center justify-center dark:bg-dark-btn-bg bg-light-btn-bg transition-colors hover:dark:text-dark-btn-txt hover:text-light-btn-txt text-[18px]'>
+                  {userName?.slice(0, 1).toLocaleUpperCase()}
+                </span>
+              </li>
+              
+            </>
+          ) : (
+            <>
+              <li>
+                <button
+                  onClick={() => navigate('/signup')}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                  }
+                >
+                  
+                  Signup
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigate('/login')}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'dark:text-dark-btn-bg text-light-btn-bg transition-colors'
+                      : 'hover:dark:text-dark-btn-bg hover:text-light-btn-bg transition-colors'
+                  }
+                >
+                  
+                  Login
+                </button>
+              </li>
+            </>
+          )}
+
+                </ul>
+      
+      </div>
+    </div>
+  )
+}
+
+export default AdminNavbar
