@@ -1,22 +1,24 @@
 import { baseApi } from "./Api";
 
 export const InjectedAdminApi = baseApi.injectEndpoints({
+
     endpoints: (builder) => ({
         getSummery: builder.query({
             query: (token) => ({
                 url: "/admin/summery",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+                // headers: {
+                //     Authorization: `Bearer ${token}`
+                // }
+            }),
+            providesTags: ["Summery"]
         }),
         getUser: builder.query(
             {
                 query: (token) => ({
                     url: "/admin/users",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    // headers: {
+                    //     Authorization: `Bearer ${token}`
+                    // }
                 }),
                 providesTags: ["Users"]
             }
@@ -25,46 +27,46 @@ export const InjectedAdminApi = baseApi.injectEndpoints({
             query: ({ userId, accessToken }) => ({
                 url: `/admin/users/${userId}`,
                 method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
+                // headers: {
+                //     Authorization: `Bearer ${accessToken}`
+                // }
             }),
             invalidatesTags: ["Users"]
         }),
         getAllComments: builder.query({
             query: (token) => ({
                 url: "/admin/comments",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                // headers: {
+                //     Authorization: `Bearer ${token}`
+                // }
             }),
             providesTags: ["Comments"]
         }),
         deleteComment: builder.mutation({
-            query: ({ commentId, accessToken }) => ({
+            query: ({ commentId }) => ({
                 url: `/admin/comments/${commentId}`,
                 method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
+                // headers: {
+                //     Authorization: `Bearer ${accessToken}`
+                // }
             }),
             invalidatesTags: ["Comments"]
         }),
         getBlogs: builder.query({
             query: (token) => ({
                 url: "/admin/blogs",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                // headers: {
+                //     Authorization: `Bearer ${token}`
+                // }
             }),
             providesTags: ["Blogs"]
         }),
         getSingleBlog: builder.query({
-            query: ( blogId  ) => ({
+            query: (blogId) => ({
                 url: `/admin/blogs/${blogId}`,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                }
+                // headers: {
+                //     Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                // }
             }),
             invalidatesTags: ["Comments"]
         }),
@@ -72,31 +74,31 @@ export const InjectedAdminApi = baseApi.injectEndpoints({
             query: ({ blogId, accessToken }) => ({
                 url: `/admin/blogs/${blogId}`,
                 method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
+                // headers: {
+                //     Authorization: `Bearer ${accessToken}`
+                // }
             }),
             invalidatesTags: ["Blogs"]
         }),
         createBlog: builder.mutation({
-            query: ({ formData, accessToken }) => ({
+            query: ({ form }) => ({
                 url: '/admin/blogs',
                 method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
-                body: formData,
+                // headers: {
+                //     headers: { "Content-Type": "multipart/form-data" }
+                // },
+                body: form,
             }),
             invalidatesTags: ["Blogs"]
         }),
-           EditBlog: builder.mutation({
-            query: ({ formData, accessToken,blogId }) => ({
+        EditBlog: builder.mutation({
+            query: ({ form, blogId }) => ({
                 url: `/admin/blogs/${blogId}`,
                 method: 'PATCH',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
-                body: formData,
+                // headers: {
+                //     headers: { "Content-Type": "multipart/form-data" }
+                // },
+                body: form,
             }),
             invalidatesTags: ["Blogs"]
         }),
@@ -106,4 +108,4 @@ export const InjectedAdminApi = baseApi.injectEndpoints({
 
 })
 
-export const { useGetUserQuery, useGetAllCommentsQuery, useDeleteUserMutation, useGetBlogsQuery, useDeleteCommentMutation, useGetSummeryQuery, useDeleteBlogMutation, useCreateBlogMutation,useGetSingleBlogQuery,useEditBlogMutation } = baseApi;
+export const { useGetUserQuery, useGetAllCommentsQuery, useDeleteUserMutation, useGetBlogsQuery, useDeleteCommentMutation, useGetSummeryQuery, useDeleteBlogMutation, useCreateBlogMutation, useGetSingleBlogQuery, useEditBlogMutation } = baseApi;

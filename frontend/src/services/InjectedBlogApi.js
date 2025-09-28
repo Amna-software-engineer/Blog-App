@@ -1,6 +1,7 @@
 import { baseApi } from "./Api";
 
 export const injectedBlogApi = baseApi.injectEndpoints({
+    
     endpoints: (builder) => ({
         getBlogs: builder.query({
             query: () => "/blogs",
@@ -24,6 +25,8 @@ export const injectedBlogApi = baseApi.injectEndpoints({
             invalidatesTags: (result, error,  {blogId}) => [
                 { type: "Comments", id: blogId },
                 { type: "single Blog" },
+                {type: "Blogs" },
+                {type: "Summery"}
             ],
         }),
 
@@ -33,7 +36,7 @@ export const injectedBlogApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: { blogId, userId },
             }),
-            invalidatesTags: ["single Blog"]
+            invalidatesTags: ["single Blog", "Blogs", "Summery"]
         })
 
     })

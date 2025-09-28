@@ -41,10 +41,10 @@ const ManageComments = () => {
               Comment Body
             </th>
             <th className='border border-light-border dark:border-dark-border p-2'>
-              Blog Id
+              Blog title
             </th>
             <th className='border border-light-border dark:border-dark-border p-2'>
-              User Id
+              UserName
             </th>
             <th className='border border-light-border dark:border-dark-border p-2'>
               Delete
@@ -62,10 +62,10 @@ const ManageComments = () => {
                   {com?.content}
                 </td>
                 <td className='border border-light-border dark:border-dark-border p-2 text-center'>
-                  {com?.blogId}
+                  {com?.blogId?.title}
                 </td>
                 <td className='border border-light-border dark:border-dark-border p-2 text-center'>
-                  {com?.userId}
+                  {com?.userId?.firstName}
                 </td>
                 <td className='border border-light-border dark:border-dark-border p-2 text-center text-red-600 font-semibold '>
                   <button

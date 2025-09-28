@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useDeleteBlogMutation, useGetBlogsQuery } from '../../services/InjectedAdminApi';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
 const ManageBlogs = () => {
  const accessToken = localStorage.getItem('accessToken');
@@ -58,11 +59,11 @@ console.log("blogs ",blogs);
             blogs.map((blog, i) => (
               <tr key={i}>
                 <td className='border border-light-border dark:border-dark-border p-2 text-center'>
-                  Alfreds Futterkiste
+                  {format(blog?.updatedAt,"MMM dd yyyy")}
                 </td>
                 <td className='border border-light-border dark:border-dark-border text-center py-2'>
                   <img
-                    src={blog?.image}
+                    src={`http://localhost:3000/${blog?.image}`}
                     alt=''
                     className='h-10 w-20 hover:scale-110  mx-auto '
                   />

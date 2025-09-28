@@ -185,12 +185,15 @@ console.log("refreshToken ",refreshtoken);
         return res.status(401).json({ errs: ["No refresh token provided"] });
     }
     const decoded = jwt.verify(refreshtoken, JWT_REFRESH_SECRET);
+    console.log("decoded refresh token", decoded);
     if (decoded.exp > Date.now() / 1000) {
         const user = await User.findOne({ _id: decoded.id });
         if (!user) {
             res.status(404).json({ errs: ["User does not found"] })
         } else {
-            const accessToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email,isAdmin: user.isAdmin }, "Access-token-Secret", { expiresIn: "5m" });
+            const accessToken = jwt.sign({ id: user._id, firstName: user.firstName, email: user.email,isAdmin: user.isAdmin }, JWT_ACCESS_SECRET, { expiresIn: "5m" });
+            console.log("new accessToken", accessToken);
+            
             res.status(200).json({ msg: "Access token extented successfully ", accessToken })
         }
     }

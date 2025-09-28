@@ -11,9 +11,7 @@ createRoot(document.getElementById('root')).render(
       <App />
       <ToastContainer
         autoClose={1000}
-        theme={
-         localStorage.getItem('theme') && localStorage.getItem('theme') 
-        }
+        theme={ localStorage.getItem('theme') }
       />
     </Provider>
   </StrictMode>

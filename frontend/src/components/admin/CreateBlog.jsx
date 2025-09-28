@@ -50,19 +50,26 @@ if(isLoading){
 
   const handleSubmit = async e => {
     e.preventDefault()
+    const form=new FormData();
+    form.append("title",formData.title)
+    form.append("description",formData.description)
+    form.append("image",formData.image)
+    console.log("form ",form);                   
+    console.log("file selected", formData.image);
+console.log("type", typeof formData.image)
     try {
       let ApiResponse="";
       if(isEditing){
-        console.log('Form Submitted in isEditing mode', formData)
+        console.log('Form Submitted in isEditing mode', form)
        ApiResponse = await EditBlog({
-        formData,
+        form,
         accessToken,blogId
       }).unwrap();
       console.log('ApiResponse from editBlog ', ApiResponse)
       }else{
-        console.log('Form Submitted cretaing mode', formData)
+        console.log('Form Submitted cretaing mode', form)
          ApiResponse = await CreateBlog({
-          formData,
+          form,
           accessToken
         }).unwrap()
         console.log('ApiResponse from CreateBlog ', ApiResponse)
@@ -74,21 +81,10 @@ if(isLoading){
       // navigate('/login')
       toast.error(error?.data?.errs?.[0] || 'Failed to Create Blog')
     }
+    console.log("form ",form);
+    console.log("form.img ",form.image);
   }
-  // const handleEditSubmit = async e => {
-  //   e.preventDefault()
-  //   try {
-      
-  //     toast.success(ApiResponse.msg)
-  //     navigate('/admin/blogs')
-  //     console.log('ApiResponse from CreateBlog ', ApiResponse)
-  //   } catch (error) {
-  //     console.log('Error from API:', error)
-  //     // navigate('/login')
-  //     toast.error(error?.data?.errs?.[0] || 'Failed to Edit Blog')
-  //   }
-  // }
- console.log("formData ",formData);
+
  
   return (
     <div className='w-full flex items-center justify-center bg-light-card-bg dark:bg-dark-card-bg text-light-txt dark:text-dark-txt px-4'>
@@ -137,13 +133,14 @@ if(isLoading){
               Image URL
             </label>
             <input
-              type='text'
+              type='file'
               id='image'
+              accept='image/*'
               name='image'
-              value={ formData.image}
+              // value={ formData.image}
               placeholder='Enter image link'
               className='border border-light-border dark:border-dark-border bg-light-card-bg dark:bg-dark-card-bg rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-              onChange={e => handleChange(e)}
+              onChange={e => setFormData({...formData,image:e.target.files[0]})}
             />
           </div>
 

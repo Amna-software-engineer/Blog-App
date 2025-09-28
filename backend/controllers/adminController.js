@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const Blogs = require("../models/blogModel");
 const Comments = require("../models/commentsModel");
-
+const fs = require('fs');
 
 // for total users,blogs,comments
 exports.getSummery = async (req, res) => {
@@ -44,10 +44,9 @@ exports.deleteUser = async (req, res) => {
     }
 }
 exports.getComments = async (req, res) => {
-    // const blogId = req.params.blogId;
     try {
-        // const AllComments = await Comments.find().populate("userId", "firstName email")
-        const AllComments = await Comments.find()
+
+        const AllComments = await Comments.find().populate("userId", "firstName").populate("blogId", "title")
         console.log("AllComments ", AllComments);
         res.status(200).json(AllComments);
     } catch (error) {
@@ -97,9 +96,11 @@ exports.deleteBlog = async (req, res) => {
     }
 }
 exports.createBlog = async (req, res) => {
+    console.log("req.file ", req.file);
     console.log("req.body ", req.body);
+    const image = req.file && req.file.path;
 
-    const { title, image, description } = req.body;
+    const { title, description } = req.body;
 
     try {
         const newBlog = new Blogs({ title, image, description });
@@ -112,14 +113,13 @@ exports.createBlog = async (req, res) => {
     }
 }
 exports.getEditBlog = async (req, res) => {
-        const blogId = req.params.blogId;
-
+    const blogId = req.params.blogId;
     try {
         const blog = await Blogs.findById(blogId);
         if (!blog) {
             return res.status(404).json({ errs: ["Blog not found"] })
         }
-        res.status(200).json({msg:"Blog featched successfully",blog});
+        res.status(200).json({ msg: "Blog featched successfully", blog });
     } catch (error) {
         console.log("error ", error);
         res.status(400).json({ errs: ["Error while fetching blog"] })
@@ -129,16 +129,25 @@ exports.getEditBlog = async (req, res) => {
 
 exports.editBlog = async (req, res) => {
     const blogId = req.params.blogId;
-    const { title, image, description } = req.body;
+    const { title, description } = req.body;
+    console.log("req.file ", req.file);
+    console.log("req.body ", req.body);
+    const image = req.file && req.file.path;
     try {
-        const blog = await Blogs.findByIdAndUpdate(blogId,{ title, image, description }, { new: true });
-        // if (!blog) {
-        //     return res.status(404).json({ errs: ["Blog not found"] })
-        // }
-        // blog.title = title || blog.title;
-        // blog.image = image || blog.image;
-        // blog.description = description || blog.description;
-        // const updatedBlog = await blog.updateOne();
+        const blog = await Blogs.findById(blogId);
+        console.log("blog ", blog);
+        blog.title = title;
+        blog.description = description;
+        if (req.file && req.file.path) {
+            fs.unlink(blog.image,(err)=>{
+                if(err){
+                    console.log("err while deleting old image ",err);
+                }   
+            });
+            blog.image = image;
+        }
+        blog.image = image 
+        await blog.save();
         console.log("updatedBlog ", blog);
 
         res.status(200).json({ msg: "Blog Updated successfully", blog });

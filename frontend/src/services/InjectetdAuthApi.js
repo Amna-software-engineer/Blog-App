@@ -2,15 +2,14 @@ import { baseApi } from "./Api";
 
 export const injectedUserApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+          
         createUser: builder.mutation( //query for get req mutation for other reqs
             {
                 query: (user) => ({
                     url: "/signup",
                     method: "POST",
                     body: user
-
                 })
-
             }),
 
         userLogin: builder.mutation({
