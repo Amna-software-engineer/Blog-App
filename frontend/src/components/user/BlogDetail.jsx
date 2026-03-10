@@ -98,7 +98,7 @@ console.log("userid ",decoded);
           <span>Published on 1 september, 2026</span>
         </p>
         <img
-          src={`http://localhost:3000/${singleBlog?.image}`}
+          src={`https://blog-app-api-beige.vercel.app/${singleBlog?.image}`}
           // src='/web development.jpg'
           alt='web development.jpg'
           className='rounded-md mx-auto'

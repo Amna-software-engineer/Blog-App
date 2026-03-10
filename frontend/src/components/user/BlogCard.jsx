@@ -7,7 +7,7 @@ const BlogCard = ({ className, lineClamp, blog }) => {
       className={`border-2 dark:border-dark-border border-light-border rounded-md  flex gap-4 p-6 my-4 ${className} overflow-hidden shadow-lg hover:shadow-xl`}
     >
       <img
-        src={`http://localhost:3000/${blog.image}`}
+        src={`https://blog-app-api-beige.vercel.app/${blog.image}`}
         className='w-full aspect-[16/9] object-cover rounded-md'
       />
       {/* content */}

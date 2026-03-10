@@ -35,7 +35,7 @@ app.use("/uploads", express.static(path.join(__dirname, 'uploads')))
 app.use(express.urlencoded({ extended: true }));// to parse form data
 app.use(express.json())
 app.use(cors({
-    origin: "http://localhost:5173",  //  Frontend URL
+    origin: "https://blog-app-one-gamma-53.vercel.app",  //  Frontend URL
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true                 //  Required for cookies
 }));

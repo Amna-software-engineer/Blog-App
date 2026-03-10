@@ -63,7 +63,7 @@ console.log("blogs ",blogs);
                 </td>
                 <td className='border border-light-border dark:border-dark-border text-center py-2'>
                   <img
-                    src={`http://localhost:3000/${blog?.image}`}
+                    src={`https://blog-app-api-beige.vercel.app/${blog?.image}`}
                     alt=''
                     className='h-10 w-20 hover:scale-110  mx-auto '
                   />

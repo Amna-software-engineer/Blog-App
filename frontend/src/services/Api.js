@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 
 const rawBaseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:3000",
+    baseUrl: "https://blog-app-api-beige.vercel.app",
     credentials: "include",
     prepareHeaders: (headers) => {
         const token = localStorage.getItem("accessToken")
@@ -21,7 +21,7 @@ export const customBaseQuery = async (args, api, extraOptions) => {
         const refreshtoken = localStorage.getItem("refreshToken");
         const refreshDecoded = jwtDecode(refreshtoken);
         if (refreshtoken && Date.now() / 1000 < refreshDecoded.exp) {
-            const refreshResponse = await fetch("http://localhost:3000/refresh-token", {
+            const refreshResponse = await fetch("https://blog-app-api-beige.vercel.app/refresh-token", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ refreshtoken })
