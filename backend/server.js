@@ -1,24 +1,25 @@
-// external modules
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const mutler = require("multer");
-// local modules
-const authRouter = require("./routers/authRouter");
-const userRouter = require("./routers/userRouter");
-const cookieParser = require("cookie-parser");
-const adminRouter = require("./routers/adminRouter");
-const { isAdmin } = require("./middleware/isAdmin");
-const multer = require("multer");
-const path = require("path");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import authRouter from "./routers/authRouter.js";
+import userRouter from "./routers/userRouter.js";
+import cookieParser from "cookie-parser";
+import adminRouter from "./routers/adminRouter.js";
+import { isAdmin } from "./middleware/isAdmin.js";
+
+// Setup __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = 3000;
 dotenv.config()
 const DB_URL = process.env.MONGODB_URL;
-
-const rootDir = path.dirname(require.main.filename)
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -29,8 +30,8 @@ const storage = multer.diskStorage({
     }
 })
 const uplaod = multer({ storage })
-app.use(express.static(path.join(rootDir, 'uploads')))
-app.use("/uploads", express.static(path.join(rootDir, 'uploads')))
+app.use(express.static(path.join(__dirname, 'uploads')))
+app.use("/uploads", express.static(path.join(__dirname, 'uploads')))
 app.use(express.urlencoded({ extended: true }));// to parse form data
 app.use(express.json())
 app.use(cors({

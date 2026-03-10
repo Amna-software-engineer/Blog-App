@@ -1,10 +1,10 @@
-const User = require("../models/userModel");
-const Blogs = require("../models/blogModel");
-const Comments = require("../models/commentsModel");
-const fs = require('fs');
+import User from "../models/userModel.js";
+import Blogs from "../models/blogModel.js";
+import Comments from "../models/commentsModel.js";
+import fs from 'fs';
 
 // for total users,blogs,comments
-exports.getSummery = async (req, res) => {
+export const getSummery = async (req, res) => {
 
     try {
         const userCount = await User.countDocuments();
@@ -18,7 +18,7 @@ exports.getSummery = async (req, res) => {
         res.status(400).json({ errs: ["Error while geting summery"] })
     }
 }
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
 
     try {
         const allUsers = await User.find({}).select("firstName email isAdmin createdAt");
@@ -30,7 +30,7 @@ exports.getUsers = async (req, res) => {
         res.status(400).json({ errs: ["Error while fetching Users"] })
     }
 }
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
 
     const userId = req.params.userId;
     try {
@@ -43,7 +43,7 @@ exports.deleteUser = async (req, res) => {
         res.status(400).json({ errs: ["Error while deleting User"] })
     }
 }
-exports.getComments = async (req, res) => {
+export const getComments = async (req, res) => {
     try {
 
         const AllComments = await Comments.find().populate("userId", "firstName").populate("blogId", "title")
@@ -54,7 +54,7 @@ exports.getComments = async (req, res) => {
         res.status(400).json({ errs: ["Error while fetching Comments"] })
     }
 }
-exports.deleteComment = async (req, res) => {
+export const deleteComment = async (req, res) => {
     console.log("inside deletedComment");
 
     const commentId = req.params.commentId;
@@ -68,7 +68,7 @@ exports.deleteComment = async (req, res) => {
         res.status(400).json({ errs: ["Error while deleting Comment"] })
     }
 }
-exports.getBlogs = async (req, res) => {
+export const getBlogs = async (req, res) => {
     try {
         const AllBlogs = await Blogs.find();
         console.log("AllBlogs ", AllBlogs);
@@ -80,7 +80,7 @@ exports.getBlogs = async (req, res) => {
     }
 
 }
-exports.deleteBlog = async (req, res) => {
+export const deleteBlog = async (req, res) => {
 
     const blogId = req.params.blogId;
     console.log("blogid ", blogId);
@@ -95,7 +95,7 @@ exports.deleteBlog = async (req, res) => {
         res.status(400).json({ errs: ["Error while deleting blog"] })
     }
 }
-exports.createBlog = async (req, res) => {
+export const createBlog = async (req, res) => {
     console.log("req.file ", req.file);
     console.log("req.body ", req.body);
     const image = req.file && req.file.path;
@@ -112,7 +112,7 @@ exports.createBlog = async (req, res) => {
         res.status(400).json({ errs: ["Error while creating blog"] })
     }
 }
-exports.getEditBlog = async (req, res) => {
+export const getEditBlog = async (req, res) => {
     const blogId = req.params.blogId;
     try {
         const blog = await Blogs.findById(blogId);
@@ -127,7 +127,7 @@ exports.getEditBlog = async (req, res) => {
 
 }
 
-exports.editBlog = async (req, res) => {
+export const editBlog = async (req, res) => {
     const blogId = req.params.blogId;
     const { title, description } = req.body;
     console.log("req.file ", req.file);

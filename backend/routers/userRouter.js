@@ -1,14 +1,15 @@
-const express=require("express");
+import express from "express";
+// import userController from "../controllers/userController.js";
+import {getAllBlogs, getComments, getSingleBlog, postAddComment, postCreateBlog, postLikeBlog, postWatchLater} from "../controllers/userController.js";
 
-const useRouter=express.Router();
-const userController=require("../controllers/userController");
+const useRouter = express.Router();
 
-useRouter.post("/create-blog",userController.postCreateBlog);
-useRouter.get("/blogs",userController.getAllBlogs);
-useRouter.post("/comments/:blogId",userController.postAddComment);
-useRouter.get("/comments/:blogId",userController.getComments);
-useRouter.post("/:blogId/likes",userController.postLikeBlog);
-useRouter.post("/:blogId/watchLater",userController.postWatchLater);
-useRouter.get("/blogs/:blogId",userController.getSingleBlog);
+useRouter.post("/create-blog", postCreateBlog);
+useRouter.get("/blogs", getAllBlogs);
+useRouter.post("/comments/:blogId", postAddComment);
+useRouter.get("/comments/:blogId", getComments);
+useRouter.post("/:blogId/likes", postLikeBlog);
+useRouter.post("/:blogId/watchLater", postWatchLater);
+useRouter.get("/blogs/:blogId", getSingleBlog);
 
-module.exports=useRouter;
+export default useRouter;

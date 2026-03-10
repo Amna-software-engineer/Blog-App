@@ -1,5 +1,5 @@
-// const jwt = require("jsonwebtoken");
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+
 const JWT_ADMIN_ACCESS_SECRET = process.env.admin_access_token_secret
 const JWT_ACCESS_SECRET = process.env.access_token_secret
 

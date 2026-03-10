@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const commentSchema =new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -6,4 +6,4 @@ const commentSchema =new mongoose.Schema({
     content: { type: String, required: true },
 },{timestamps:true})//automaticaly add createdAt,updatedAt fields
 
-module.exports=mongoose.model("Comments",commentSchema);
+export default mongoose.model("Comments",commentSchema);

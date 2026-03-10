@@ -34,7 +34,8 @@ const Login = () => {
         navigate('/')
       
     } catch (error) {
-      console.log('Error from API:', error)
+      console.log('Error from API:', error);
+      toast.error("Failed to login")
       setResponse(error)
       // navigate('/login')
     }

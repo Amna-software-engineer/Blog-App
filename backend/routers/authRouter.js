@@ -1,16 +1,13 @@
-const express=require("express");
+import express from "express";
+// import * as authController from "../controllers/authController.js";
+import {postForgetPassword, postLogin, postRefreshToken, postResetPassword, postSignup} from "../controllers/authController.js";
 
-const authRouter=express.Router();
-const authController=require("../controllers/authController");
+const authRouter = express.Router();
 
-authRouter.post("/login",authController.postLogin);
-authRouter.post("/signup",authController.postSignup);
-authRouter.post("/forget-password",authController.postForgetPassword);
-authRouter.post("/reset-password/:id/:token",authController.postResetPassword);
-authRouter.post("/refresh-token",authController.postRefreshToken);
+authRouter.post("/login", postLogin);
+authRouter.post("/signup", postSignup);
+authRouter.post("/forget-password",  postForgetPassword);
+authRouter.post("/reset-password/:id/:token",  postResetPassword);
+authRouter.post("/refresh-token",  postRefreshToken);
 
-
-
-
-
-module.exports=authRouter;
+export default authRouter;
